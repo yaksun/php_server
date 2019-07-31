@@ -36,4 +36,32 @@ class Index
         }
 
     }
+
+    //增加待办
+    public function add()
+    {
+        if(!empty($_POST)){
+            $post = $_POST;
+
+            $data=['title'=>$post['title'],'status'=>$post['status']];
+
+            Db::name('todo')->insert($data);
+
+            \Response::json(200,'添加待办成功',[]);
+        }
+
+    }
+
+    //删除待办
+    public function delete()
+    {
+        if(!empty($_POST)){
+            $data = $_POST;
+            echo ('你来了删除');
+        }
+
+    }
+
+
+
 }
