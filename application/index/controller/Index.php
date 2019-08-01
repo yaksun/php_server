@@ -70,23 +70,18 @@ class Index
     }
 
     //删除待办
-    //当不传参数的时候,删除所有已完成的
-    public function delete($id=false)
+    public function delete($_POST)
     {
-        if (!$id) {
-            $res = Db::name('todo')->where('status', 1)->delete();
 
-
-        } else {
-            $res = Db::name('todo')->delete($id);
-
-        }
-
-
-        if ($res) {
-            \Response::json(200, '删除待办成功', ['id' => $id]);
-        }
+        var_dump($_POST);
+//            $res = Db::name('todo')->delete($id);
+//
+//        if ($res) {
+//            \Response::json(200, '删除待办成功', ['id' => $id]);
+//        }
     }
+
+
 
 
 }
