@@ -5,8 +5,9 @@ namespace app\index\controller;
 
 
 //use app\index\model\Todo;
+use function MongoDB\BSON\fromJSON;
 use think\Db;
-
+use think\response\Json;
 
 
 class Index
@@ -41,27 +42,51 @@ class Index
     public function add()
     {
         if(!empty($_POST)){
-            $post = $_POST;
+//           var_dump($_POST);
+//            传递过来的是一个全新的数组
+//           [ '{"title":"gwregre","status":0}' => string '']
+//           根据value取出对应的key
+           $a = '';
+            $trans = array_flip($_POST);
+            $b = $trans[$a];
+//            '{"title":"gwregre","status":0}'
 
-            $data=['title'=>$post['title'],'status'=>$post['status']];
+//            将字符串转换成对象
+                $c = json_decode($b);
 
-            Db::name('todo')->insert($data);
+//                echo $c->title;
+                $data=[];
+                $data['title']=$c->title;
+                $data['status']=$c->status;
+                 $id = Db::name('todo')->insertGetId($data);
+                 if($id){
+                     \Response::json(200,'添加待办成功','');
+                 }
 
-            \Response::json(200,'添加待办成功',[]);
-        }
+
+
+    }
 
     }
 
     //删除待办
-    public function delete()
+    //当不传参数的时候,删除所有已完成的
+    public function delete($id=false)
     {
-        if(!empty($_POST)){
-            $data = $_POST;
-            echo ('你来了删除');
+        if (!$id) {
+            $res = Db::name('todo')->where('status', 1)->delete();
+
+
+        } else {
+            $res = Db::name('todo')->delete($id);
+
         }
 
-    }
 
+        if ($res) {
+            \Response::json(200, '删除待办成功', ['id' => $id]);
+        }
+    }
 
 
 }
